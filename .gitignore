@@ -1,1 +1,9 @@
 .env
+__pycache__/
+*.py[cod]
+model_evaluation.png
+eda_visualizations.png
+tmp.py
+test.py
+housing_price_model.joblib
+
