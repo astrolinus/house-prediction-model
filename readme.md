@@ -35,8 +35,8 @@ python main.py
 
 ```text
 --- Linear Regression ---
-Mean Absolute Error (MAE):      $50,193.05
-Root Mean Squared Error (RMSE): $69,047.61
-R-squared (R2) Score:           0.6483
+Mean Absolute Error (MAE):      $48,680.38
+Root Mean Squared Error (RMSE): $66,819.12
+R-squared (R2) Score:           0.6600
 
 ```

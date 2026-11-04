@@ -8,10 +8,15 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 df = pd.read_csv("housing.csv")
 
 # Convert categorical column 'ocean_proximity' into one-hot encoded dummy variables
-housing_data = pd.get_dummies(df, columns=["ocean_proximity"])
+housing_data = pd.get_dummies(df, columns=["ocean_proximity"], drop_first=True)
 
 # Drop rows containing missing/null values in the 'total_bedrooms' column
 housing_data = housing_data.dropna(subset=["total_bedrooms"])
+
+# Feature engineering for better pattern landscapre
+housing_data["rooms_per_houshold"] = housing_data["total_rooms"]/housing_data["households"]
+housing_data["bedrooms_per_rooms"] = housing_data["total_bedrooms"]/housing_data["total_rooms"]
+housing_data["people_per_houses"] = housing_data["population"]/housing_data["households"]
 
 
 # Separate independent features (X) and target variable (y)
@@ -19,7 +24,7 @@ X = housing_data.drop(columns=["median_house_value"])
 y = housing_data["median_house_value"]
 
 # Split the data into training (80%) and testing (20%) sets
-X_train , X_test , y_train , y_test = train_test_split(X , y , test_size=0.2)
+X_train , X_test , y_train , y_test = train_test_split(X , y , test_size=0.2, random_state=404)
 
 # Initialize the Linear Regression model
 model = LinearRegression()
@@ -44,5 +49,3 @@ def evaluate_model(y_true, y_pred, model_name):
 # Evaluate model performance on the test set
 lr_metric = evaluate_model(y_test , y_pred, "Linear Regression")
 
-# Print the resulting metrics tuple
-print(lr_metric)
