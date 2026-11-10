@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
@@ -13,7 +14,7 @@ housing_data = pd.get_dummies(df, columns=["ocean_proximity"], drop_first=True)
 # Drop rows containing missing/null values in the 'total_bedrooms' column
 housing_data = housing_data.dropna(subset=["total_bedrooms"])
 
-# Feature engineering for better pattern landscapre
+# Feature engineering: structural and density ratios
 housing_data["rooms_per_houshold"] = housing_data["total_rooms"]/housing_data["households"]
 housing_data["bedrooms_per_rooms"] = housing_data["total_bedrooms"]/housing_data["total_rooms"]
 housing_data["people_per_houses"] = housing_data["population"]/housing_data["households"]
@@ -26,14 +27,21 @@ y = housing_data["median_house_value"]
 # Split the data into training (80%) and testing (20%) sets
 X_train , X_test , y_train , y_test = train_test_split(X , y , test_size=0.2, random_state=404)
 
-# Initialize the Linear Regression model
-model = LinearRegression()
+# Initialize Linear Regression and tuned Decision Tree Regressor
+linear_model = LinearRegression()
+treeRegressor_model = DecisionTreeRegressor(
+    max_depth=10,
+    min_samples_split=22,
+    min_samples_leaf=10,
+    random_state=42)
 
-# Train (fit) the model on the training data
-model.fit(X_train , y_train)
+# Train both models on the training data
+linear_model.fit(X_train , y_train)
+treeRegressor_model.fit(X_train , y_train)
 
-# Generate predictions on the test dataset
-y_pred = model.predict(X_test)
+# Generate predictions for both models on the test set
+lr_y_pred = linear_model.predict(X_test)
+decs_tree_y_pred = treeRegressor_model.predict(X_test)
 
 # Function to calculate and print key evaluation metrics (MAE, RMSE, R2)
 def evaluate_model(y_true, y_pred, model_name):
@@ -46,6 +54,7 @@ def evaluate_model(y_true, y_pred, model_name):
     print(f"R-squared (R2) Score:           {r2:.4f}\n")
     return mae, rmse, r2
 
-# Evaluate model performance on the test set
-lr_metric = evaluate_model(y_test , y_pred, "Linear Regression")
+# Evaluate and compare both models on the test set
+lr_metric = evaluate_model(y_test , lr_y_pred, "Linear Regression")
+decs_tree_metric = evaluate_model(y_test , decs_tree_y_pred, "Decision Tree Regression")
 
