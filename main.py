@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
@@ -27,21 +28,27 @@ y = housing_data["median_house_value"]
 # Split the data into training (80%) and testing (20%) sets
 X_train , X_test , y_train , y_test = train_test_split(X , y , test_size=0.2, random_state=404)
 
-# Initialize Linear Regression and tuned Decision Tree Regressor
+# Initialize Linear Regression, tuned Decision Tree, and Random Forest regressors
 linear_model = LinearRegression()
+
 treeRegressor_model = DecisionTreeRegressor(
     max_depth=10,
     min_samples_split=22,
     min_samples_leaf=10,
     random_state=42)
 
-# Train both models on the training data
+randomForestModel = RandomForestRegressor(random_state=42,
+                                          n_jobs=-1)
+
+# Train all three models on the training data
 linear_model.fit(X_train , y_train)
 treeRegressor_model.fit(X_train , y_train)
+randomForestModel.fit(X_train , y_train)
 
-# Generate predictions for both models on the test set
+# Generate predictions for all three models on the test set
 lr_y_pred = linear_model.predict(X_test)
-decs_tree_y_pred = treeRegressor_model.predict(X_test)
+decision_tree_y_pred = treeRegressor_model.predict(X_test)
+random_forest_y_pred = randomForestModel.predict(X_test)
 
 # Function to calculate and print key evaluation metrics (MAE, RMSE, R2)
 def evaluate_model(y_true, y_pred, model_name):
@@ -54,7 +61,13 @@ def evaluate_model(y_true, y_pred, model_name):
     print(f"R-squared (R2) Score:           {r2:.4f}\n")
     return mae, rmse, r2
 
-# Evaluate and compare both models on the test set
+# Evaluate and compare all three models on the test set
 lr_metric = evaluate_model(y_test , lr_y_pred, "Linear Regression")
-decs_tree_metric = evaluate_model(y_test , decs_tree_y_pred, "Decision Tree Regression")
+
+decs_tree_metric = evaluate_model(y_test , decision_tree_y_pred, "Decision Tree Regressor")
+
+randomForrest_metric = evaluate_model(y_test , random_forest_y_pred, "Random Forrest Regressor")
+
+
+
 
