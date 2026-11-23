@@ -6,6 +6,21 @@ A machine learning project that predicts median house values in California, comp
 
 This project uses the `housing.csv` dataset to predict California median home values. It cleans missing data, encodes categorical features, creates domain-specific ratio features, trains Linear Regression, Decision Tree, and Random Forest models, and evaluates their performance side by side.
 
+### Interactive Jupyter Lab Experimentation
+To facilitate hands-on experimentation with models, datasets, and feature engineering methods, this project includes an interactive Jupyter notebook: **`main_lab.ipynb`**. 
+
+Using the Jupyter Lab / Notebook interface, you can:
+- **Experiment with Data & Preprocessing**: Inspect intermediate data shapes, test alternate missing value imputations, or try new categorical encodings.
+- **Test Feature Engineering Methods**: Create and evaluate new ratio or geographical features on the fly.
+- **Tune & Benchmark Models**: Interactively test different algorithms (e.g. Linear Models vs. Random Forest) and tune hyperparameters like `max_depth`, `n_estimators`, or `min_samples_split` cell-by-cell.
+
+## Project Structure
+
+- `main.py`: Complete Python script training and evaluating Linear Regression, Decision Tree, and Random Forest models.
+- `main_lab.ipynb`: Interactive Jupyter Lab / Notebook environment for step-by-step experimentation with data, features, and modeling methods.
+- `housing.csv`: California housing dataset.
+- `requirements.txt`: Python package dependencies.
+
 ## Workflow
 
 1. **Load Data**: Reads `housing.csv`.
@@ -16,7 +31,7 @@ This project uses the `housing.csv` dataset to predict California median home va
    - `bedrooms_per_rooms`: `total_bedrooms` / `total_rooms`
    - `people_per_houses`: `population` / `households`
 5. **Split Dataset**: Separates features and target (`median_house_value`), splitting into 80% training and 20% testing sets (`random_state=404`).
-6. **Train Models**: Fits three models on the training set:
+6. **Train Models**: Fits models on the training set:
    - `LinearRegression` (baseline)
    - `DecisionTreeRegressor` (tuned with `max_depth=10`, `min_samples_split=22`, `min_samples_leaf=10`, `random_state=42`)
    - `RandomForestRegressor` (ensemble using `random_state=42`, `n_jobs=-1`)
@@ -32,11 +47,22 @@ pip install -r requirements.txt
 
 ## How to Run
 
-Run the script with:
+### Option 1: Run the Standalone Script
+Run the complete automated pipeline from the terminal:
 
 ```bash
 python main.py
 ```
+
+### Option 2: Interactive Experimentation with Jupyter Lab / Notebook
+Launch Jupyter Lab or Notebook to run and experiment interactively cell-by-cell:
+
+```bash
+jupyter lab
+# or
+jupyter notebook main_lab.ipynb
+```
+*You can also open `main_lab.ipynb` directly in VS Code.*
 
 ## Model Comparison & Results
 
@@ -61,4 +87,3 @@ R-squared (R2) Score:           0.8191
 Tree-based models capture non-linear spatial and structural patterns much better than the linear baseline, with the ensemble **Random Forest Regressor** performing best overall:
 - **Decision Tree Regressor**: Improved **R²** from **0.6600** to **0.7445**, reducing **RMSE** by **~$8,900** and **MAE** by **~$9,455** compared to Linear Regression.
 - **Random Forest Regressor**: Achieved the strongest performance with **R² = 0.8191**, lowering **RMSE** to **$48,732.27** (~$18,087 below Linear Regression and ~$9,187 below Decision Tree) and **MAE** to **$32,031.82** (~$16,649 below Linear Regression).
-
